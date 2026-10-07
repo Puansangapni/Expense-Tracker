@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect
+
 from transactions.views import dashboard_view
 
 def home_view(request):
@@ -27,4 +28,5 @@ urlpatterns = [
     path('', home_view, name="home"),
     path('', include("accounts.urls")),
     path('dashboard/', dashboard_view, name="dashboard"),
+    path("transactions/", include("transactions.urls"))
 ]

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}
+Transactions - ExpenseTrack
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold mb-1">
+            Transactions
+        </h2>
+
+        <p class="text-muted mb-0">
+            Manage your income and expenses.
+        </p>
+    </div>
+
+    <a href="{% url 'transaction_create' %}"
+        class="btn btn-primary">
+
+        <i class="bi bi-plus-lg"></i>
+        Add Transaction
+    </a>
+</div>
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+        {% if transactions %}
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th class="text-end">
+                            Amount
+                        </th>
+                        <th class="text-center">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr>
+
+                        <td>
+                            {{ transaction.date|date:"d M Y" }}
+                        </td>
+
+                        <td>
+                            {{ transaction.description|default:"-" }}
+                        </td>
+
+                        <td>
+                            {% if transaction.category %}
+                                {{ transaction.category.name }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if transaction.type == "income" %}
+                                <span class="badge bg-success">
+                                    Income
+                                </span>
+                            
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    Expense 
+                                </span>
+                            
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end fw-semibold">
+                            {% if transaction.type == "income" %}
+                                <span class="text-success">
+                                    + Rp 
+                                    {{ transaction.amount|floatformat:0 }}
+                                </span>
+                            
+                            {% else %}
+                                <span class="text-danger">
+                                    - Rp 
+                                    {{ transaction.amount|floatformat:0 }}
+                                </span>
+                            
+                            {% endif %}
+                        </td>
+
+                        <td class="text-center">
+                            <a href="{% url 'transaction_update' transaction.pk %}"
+                                class="btn btn-outline-primary btn-sm me-1"
+                                title="Edit">
+
+                                <i class="bi bi-pencil"></i>
+                                Edit
+                            </a>
+
+                            <a href="{% url 'transaction_delete' transaction.pk %}"
+                                class="btn btn-outline-danger btn-sm"
+                                title="Delete">
+                            
+                                <i class="bi bi-trash"></i>
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+        <div class="text-center py-5">
+            <i class="bi bi-receipt fs-1 text-muted"></i>
+
+            <h5 class="mt-3">
+                No trasactions yet
+            </h5>
+
+            <p class="text-muted">
+                Start by adding your first transaction.
+            </p>
+
+            <a href="{% url 'transaction_create' %}"
+                class="btn btn-primary">
+            
+                <i class="bi bi-plus-lg"></i>
+                Add Transaction
+            </a>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
